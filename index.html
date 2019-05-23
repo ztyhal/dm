@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的导航</title>
+    <link rel="stylesheet" href="./style.css">
+    
+</head>
+<body>
+    <header> </header>
+    <main>
+        <style></style>
+    <div class="wrapper"  id="main">
+        
+    </div>
+
+    </main>
+    <footer></footer>
+    <script>
+        //1.初始化数据
+        var keys={
+            0:['q','w','e','r','t','y','u','i','o','p'],
+            1:['a','s','d','f','g','h','j','k','l'],
+            2:['z','x','c','v','b','n','m'],
+            length: 3
+        }
+        var hash={
+        }
+        //取出locaStorage中的zty对应的hash
+        var hashInlocalStorage =getFromLocalStorage('hal')
+        if(hashInlocalStorage){
+            hash = hashInlocalStorage
+        }
+       
+        //2.生成键盘
+        //遍历keys，生成kbd标签
+        var index =0
+        while(index< keys['length']){
+            var div = tga('div',{className:'row'})
+            main.appendChild(div)
+            var row = keys[index]
+
+            var index2 =0
+            while(index2<row['length']){
+                var kbd = tga('kbd')
+                var span = tga('span') 
+                span.textContent =row[index2]
+                span.className = 'text'
+                kbd.appendChild(span)
+                kbd.className = 'key'
+                var button = tga('button')
+                button.textContent ='编辑'
+                button.id = row[index2]
+                var img = tga('img')
+                if(hash[row[index2]]){
+                    img.src ='http://'+hash[row[index2]] + '/favicon.ico'
+                }else{
+                    img.src = '//i.loli.net/2019/03/11/5c86561dd437d.png'
+                }
+                img.onerror = function(xxx){
+                    xxx.target.src = '//i.loli.net/2019/03/11/5c86561dd437d.png'
+                }
+        
+                button.onclick = function(ztyhal){
+                    var button2 = ztyhal['target']
+                    var img2 = button2.previousSibling
+                    var key = button2['id']
+                    var x = prompt('给我一个网址')
+                    hash[key] = x
+                    img2.src = 'http://'+x+'favicon.ico'
+                    img2.onerror = function(xxx){
+                        xxx.target.src = '//i.loli.net/2019/03/11/5c86561dd437d.png'
+                    }
+                    localStorage.setItem('hal',JSON.stringify(hash))
+                }
+                kbd.appendChild(button)
+                kbd.appendChild(img)
+                div.appendChild(kbd)
+                index2 = index2+1
+            }
+            index = index+1
+        }
+        //3.监听键盘
+        document.onkeypress = function(ztyhal) {
+            var key =  ztyhal['key']
+            var website = hash[key]
+           console.log(website)
+           location.href ='http://'+website
+        }
+
+        function getFromLocalStorage(name){ 
+            return JSON.parse(localStorage.getItem(name)|| 'null ')
+        }
+        function tga(tagName,attributes){
+            var element =  document.createElement(tagName)
+            for(var key in attributes){//key 为className，id，textContent
+                element[key] = attributes[key]
+            }
+            return element 
+        }
+    </script>
+</body>
+</html>
+
+
+
